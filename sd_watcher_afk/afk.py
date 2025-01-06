@@ -8,7 +8,6 @@ from sd_client import ActivityWatchClient
 from sd_core.models import Event
 
 from .config import load_config
-from sd_qt.sd_desktop.util import get_idle_status
 
 system = platform.system()
 
@@ -75,14 +74,6 @@ class AFKWatcher:
          @param timestamp - Unix timestamp of the event
          @param duration - Time in seconds to wait before sending the event
         """
-        
-        # check if there is enable idle time detection or not (AFK)
-        # if there is disable, not creatint event for AFK
-        settings = get_idle_status()
-        if settings and "idle_time" in settings and not settings.get('idle_time'):
-            # print("return from idle")
-            return
-
         data = {"status": "afk" if afk else "not-afk", "app" : "afk", "title" : "Idle time"}
         e = Event(timestamp=timestamp, duration=duration, data=data)
         pulsetime = self.settings.timeout + self.settings.poll_time
